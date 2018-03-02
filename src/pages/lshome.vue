@@ -5,8 +5,8 @@
     </div>
     <div id="ls_body">
       <div class="bblock" @click="toProject" v-for="ban in banners" :data-proid="ban.id">
-        <img class="banner" :src="ban.url" ></img>
-        <span class="btitle" >{{ban.title}}</span>
+        <img class="banner" :src="ban.cover" ></img>
+        <span class="btitle" >{{ban.name}}</span>
       </div>
     </div>
   </div>
@@ -18,21 +18,7 @@ export default {
   name: 'ls_main',
   data () {
   return{
-    banners: [
-      {
-        id:1,
-        title:'lost home besides Sydney Opera House--Peter Karmel',
-        url:'https://tse3.mm.bing.net/th?id=OIP.nFwwOmL6kwL4RbRY7L2dvwEsDE&pid=Api'
-      },{
-        id:2,
-        title: 'old house -- Linda Vigen',
-        url: 'http://www.cparama.com/forum/cartes2013c/1386778616-584.jpg'
-      },{
-        id:3,
-        title: 'queen valley -- John Hinton',
-        url: 'http://static.skynetblogs.be/media/14756/dyn010_original_551_348_pjpeg_2623863_915e8ce4bbacb036b36d1dda71c44ec5.jpg'
-      }
-    ],
+    banners: [],
     }
   },
   methods: {
@@ -40,6 +26,19 @@ export default {
       this.inProject = true;
       this.$router.push('/loststreet/project');
     }
+  },
+  beforeCreate: function (){
+    this.$http.get('http://127.0.0.1:8000/loststreet/api_index_page/').then(response=>{
+        // sucess request'
+        var data = response.body;
+        data.forEach(function(e){
+            e.cover = 'http://127.0.0.1:8000'+e.cover;
+        })
+        console.log(data)
+        this.banners = data
+    }, response =>{
+        console.log('error occured')
+    }) 
   }
 }
 </script>

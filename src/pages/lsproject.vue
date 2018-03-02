@@ -1,9 +1,9 @@
 <template>
   <div id="lsproject">
-    <h1 style="padding-top:20px;">37 Charles Street, owned by Elziberth Virgen</h1>
+    <h1 style="padding-top:20px;">{{ban.name}}</h1>
     <div class="bblock">
-        <a :href="ban.url"><img class="banner" :src="ban.url" /></a>
-        <span class="btitle" >{{ban.title}}</span>
+        <a :href="ban.cover"><img class="banner" :src="ban.cover" /></a>
+        <!--<span class="btitle" >{{ban.name}}</span>-->
         <p>{{ban.intro}}</p>
         <!-- carousel for illustrating the gallery image of this project -->
         <el-carousel :interval="4000" type="card"  height="200px">
@@ -68,9 +68,9 @@ export default {
       }
     ],
       ban: {
-        title: 'lovely queen valley -- John Hinton',
-        url: 'http://static.skynetblogs.be/media/14756/dyn010_original_551_348_pjpeg_2623863_915e8ce4bbacb036b36d1dda71c44ec5.jpg',
-        intro: 'The Sydney Opera House is a multi-venue performing arts centre in Sydney, New South Wales, Australia. It is one of the 20th century\'s most famous and distinctive buildings.        Designed by Danish architect Jorn Utzon, the building was formally opened on 20 October 1973[4] after a gestation beginning with Utzon\'s 1957 selection as winner of an international design competition. The government of New South Wales, led by the premier, Joseph Cahill, authorised work to begin in 1958 with Utzon directing construction. The government\'s decision to build Utzon\'s design is often overshadowed by circumstances that followed, including cost and scheduling overruns as well as the architect\'s ultimate resignation.',
+        name:'', 
+        cover:'',
+        intro:'',
         blueprint: 'http://www.legeros.com/ralwake/gallery/stations/ral-hist-1932-sta2-blueprint.jpg'
       },
       comments: [
@@ -101,6 +101,18 @@ export default {
     showUpWindow: function () {
       this.showUp = !this.showUp;
     }
+  },
+  beforeCreate: function (){
+    this.$http.get('http://127.0.0.1:8000/loststreet/api_street_page/',{params:{sid:1}}).then(response=>{
+        // success request
+        var data = response.body;
+        data.cover = 'http://127.0.0.1:8000' + data.cover;
+        this.ban = data;
+        console.log('success',this.ban);
+    }, response => {
+        // fail
+        console.log('failed') 
+    })
   }
 }
 </script>
